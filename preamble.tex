@@ -1,0 +1,98 @@
+%main <main.tex>
+%next <purpose.tex>
+
+%\usepackage{float} 
+\usepackage[dvipdfmx]{graphicx}
+%%数学関連
+\usepackage{amsmath,amssymb,bm}
+
+%\usepackage{subfigure}
+%\usepackage{pdfpages}
+
+\newcommand{\argmax}{\mathop{\rm arg~max}\limits}
+\newcommand{\argmin}{\mathop{\rm arg~min}\limits}
+
+%\renewcommand{\figurename}{Figure}
+
+\renewcommand{\labelenumi}{(\theenumi)}
+
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{lmodern}
+
+%%任意の場所で図や表のキャプションを定義
+%%\figcaption もしくは \tabcaption で任意の場所でキャプションを定義できる
+\makeatletter
+\def\tbcaption{\def\@captype{table}\caption}
+\def\figcaption{\def\@captype{figure}\caption}
+\makeatother
+
+\renewenvironment{thebibliography}[1]
+{\section*{\refname\@mkboth{\refname}{\refname}}%
+  \list{\@biblabel{\@arabic\c@enumiv}}%
+       {\settowidth\labelwidth{\@biblabel{#1}}%
+        \leftmargin\labelwidth
+        \advance\leftmargin\labelsep
+ \setlength\itemsep{-0.5zh}%←ここの数値を調整(行間のつまり具合)
+ \setlength\baselineskip{11pt}%←ここの数値を調整（追加）(文字の大きさ)
+        \@openbib@code
+        \usecounter{enumiv}%
+        \let\p@enumiv\@empty
+        \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+  \sloppy
+  \clubpenalty4000
+  \@clubpenalty\clubpenalty
+  \widowpenalty4000%
+  \sfcode`\.\@m}
+ {\def\@noitemerr
+   {\@latex@warning{Empty `thebibliography' environment}}%
+  \endlist}
+
+
+%%%ソースコードの貼り付け
+\usepackage{listings,jlisting}
+%\renewcommand{\lstlistingname}{ソースコード目次}
+%\renewcommand{\lstlistlistingname}{ソースコード}
+%%Usage: \lstinputlisting[caption=キャプション,label=ラベル] {ファイルパス}
+\lstset{%
+ basicstyle={\small},%
+ identifierstyle={\small},%
+ commentstyle={\small\itshape},%
+ keywordstyle={\small\bfseries},%
+ ndkeywordstyle={\small},%
+ stringstyle={\small\ttfamily},
+ breaklines=true,
+ columns=[l]{fullflexible},%
+ numbers=left,%
+ xrightmargin=0zw,%
+ xleftmargin=3zw,%
+ numberstyle={\scriptsize},%
+ stepnumber=1,
+ numbersep=1zw,%
+ lineskip=-0.5ex,%
+ showspaces=false,%
+ captionpos=b,%
+ tabsize=4,%
+ frame=none%
+}
+
+
+%%ページ番号表示設定
+\usepackage{fancyheadings}
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\thepage} %右上にページ番号を表示
+\cfoot{}
+\renewcommand{\headrulewidth}{0pt} %下線を表示しない
+
+%%参考文献名の変更
+\renewcommand{\refname}{7\hspace{3.3mm}参考文献}
+
+%%参考文献番号を右肩につける
+\makeatletter
+\def\@cite#1{\textsuperscript{(#1)}}
+\makeatother
+
+
+

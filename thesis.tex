@@ -1,0 +1,74 @@
+\documentclass[a4paper,12pt,oneside,openany,dvipdfmx]{jsbook}
+\bibliographystyle{junsrt}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage[hyphens]{url}
+\usepackage{algorithm}
+% \usepackage[noend]{algpseudocode}
+%\usepackage{ascmac}
+\usepackage{tikz}
+\usetikzlibrary{bayesnet}
+
+\makeindex
+\setlength{\textwidth}{\fullwidth}
+%\setlength{\textheight}{40\baselineskip}
+\addtolength{\textheight}{\topskip}
+%\setlength{\voffset}{-0.55in}
+\newcommand{\argmax}{\mathop{\rm arg~max}\limits}
+\newcommand{\argmin}{\mathop{\rm arg~min}\limits}
+\newcommand{\average}[1]{\ensuremath{\langle#1\rangle} }
+\renewcommand{\figurename}{Fig. }
+\renewcommand{\tablename}{Table }
+
+\title{
+    平成31年度\\
+    卒業論文\\
+    複雑環境下でのロボット学習に向けた\\
+    深層状態空間モデルを用いた映像予測
+}
+\author{
+    平成32年2月\\
+    指導教員　松尾豊教授\\
+    \\
+    東京大学工学部システム創成学科\\
+    知能社会システムコース\\
+    03-180961 近藤生也
+}
+\date{}
+\begin{document}
+\maketitle
+\pagestyle{plain}
+\setlength{\baselineskip}{22truept}
+\frontmatter
+\input{abstract}
+\setcounter{tocdepth}{2}
+\tableofcontents
+\listoffigures
+\listoftables
+\mainmatter
+\input{introduction}
+% \input{prerequisite}
+% \input{meta_gqn}
+\input{proposal}
+% \input{experiment}
+% \input{discussion}
+\input{conclusion}
+\appendix
+%\input{appendix}
+\chapter*{謝辞}
+\addcontentsline{toc}{chapter}{謝辞}
+本論文を作成するにあたり，多くの方々にご協力をいただきました．
+
+最後に，配属からの一年間，あらゆる面でサポートをしてくださった松尾研究室の皆様に御礼申しあげて，謝辞とさせて頂きます．
+
+
+\begin{flushright}
+東京大学工学工学部システム創成学科\\
+知能社会システムコース\\
+松尾研究室学部 4年\\
+平成30年2月 谷口尚平\\
+\end{flushright}
+\bibliography{references}
+\end{document}

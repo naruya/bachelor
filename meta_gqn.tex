@@ -1,0 +1,87 @@
+\chapter{生成クエリネットワークのメタ学習としての考察}
+\label{chap:meta_gqn}
+本章では，生成クエリネットワークについて，メタ学習という観点から理論的な考察を行い，その問題点を指摘する．具体的には\ref{section:meta_learning}節で述べたメタ学習の確率モデルとしての定式化に生成クエリネットワークを当てはめて検証し，その中で浮かび上がってきた生成クエリネットワークの問題点をまとめる．
+
+
+\section{生成クエリネットワークの解釈}
+\label{section:interpretation}
+生成クエリネットワークで対象としている問題設定はメタ学習の枠組みに当てはめて考えることができる．生成クエリネットワークでは，モノの配置などがそれぞれで異なるようなシーンが多数存在し，あるシーンでの視点座標と観測がいくつか与えられた状況において，別の視点からの観測を予測する．ここでのシーンはメタ学習における個々のデータセットに相当し，モデルはあるシーン(データセット)について，与えられたコンテキスト(訓練データ)を元にクエリ(テストデータ)の視点座標(入力)から観測画像(出力)の写像を学習する．ここでは，シーンごとに入力となる視点座標の確率空間は共通であるが，出力する観測は異なるため，ドメインが共通でタスクが異なる場合のメタ学習の問題設定と一致する．このように考えると，ML-PIPと同様にデータの生成過程をFig. \ref{fig:gm_meta_gqn}のようにモデリングすることができる．ただし，生成クエリネットワークでは，ML-PIPにおける$t$番目のデータセットに固有の知識をもつ変数$\psi^{(t)}$に相当するような変数として，$i$番目のシーンに固有の知識をもつ変数$\bm{r_i}$が存在するが，それに加えて個別のデータ($\bm{v_i^k}, \bm{x_i^k}$)に固有の潜在変数$\bm{z_i^k}$を仮定してモデル化している点が通常のML-PIPの枠組みとは異なる．
+
+\begin{figure}[tbp]
+\begin{center}
+\begin{tikzpicture}
+  % Define nodes
+  \node[obs] (x_k) {$\bm{x_i^k}$};
+  \node[obs, left=of x_k] (v_k) {$\bm{v_i^k}$};
+  \node[latent, right=of x_k] (r) {$\bm{r_i}$};
+  \node[latent, above=of v_k] (z_k) {$\bm{z_i^k}$};
+   
+   \node[obs, right=of r] (x_q) {$\bm{x_i^q}$};
+   \node[obs, right=of x_q] (v_q) {$\bm{v_i^q}$};
+   \node[latent, above=of v_q] (z_q) {$\bm{z_i^q}$};
+   
+   % Plates
+  \plate {query} {(v_q)(x_q)(z_q)} {クエリ} ;
+  \plate {context} {(v_k)(x_k)(z_k)} {$D_i(k=1,...,M)$} ;
+  \plate {scene} {(context)(query)(r)} {シーン$i$} ;
+
+   
+   \node[const, above=of scene] (theta) {$\theta$};
+
+  % Connect the nodes  
+  \edge {v_k} {x_k};
+  \edge {v_q} {x_q};
+  \edge {r} {x_q};
+  \edge {r} {x_k};
+  \edge {r} {z_k};
+  \edge {r} {z_q};
+  \edge {z_k} {x_k};
+  \edge {z_q} {x_q};
+  \edge {v_k} {z_k};
+  \edge {v_q} {z_q};
+  
+  \edge [loop above] {z_k} {z_k} ; 
+  \edge [loop above] {z_q} {z_q} ; 
+  
+  \edge {theta} {x_k};
+  \edge {theta} {x_q};
+  \edge {theta} {r};
+  \edge {theta} {z_k};
+  \edge {theta} {z_q};
+
+
+\end{tikzpicture}
+\caption{メタ学習としての生成クエリネットワークのグラフィカルモデル}
+\label{fig:gm_meta_gqn}
+\end{center}
+\end{figure}
+
+このように生成過程をモデル化すると，コンテキスト$D_i$から$\bm{r}$を出力する表現ネットワークは，メタ学習において分布$p( \bm{r_i} | D_i ; \theta )$を近似する$q^\prime ( \bm{r_i} | D_i ; {\phi}^\prime )$の役割を果たしていると解釈することができる．すると，生成クエリネットワークで最大化する目的関数は以下のようになり，式(\ref{eq:gqn_draw_elbo})と一致する．
+\begin{eqnarray}
+\log p ( \bm{x _ i  ^ q} | \bm{v _i ^ q} , D_i ; \theta ) 
+&\simeq& \log \int p ( \bm{x _i ^ q} | \bm{v _i ^ q} , \bm{r _ i} ; \theta ) q^\prime ( \bm{r_i} | D_i ; {\phi}^\prime ) \mathrm { d } \bm{r_i} \label{eq:approximation_r} \\
+&=& \log p ( \bm{x_i^q} | \bm{v_i^q}, \bm{r_i}; \theta)  \quad (\bm{r_i} = f(D_i; {\phi}^\prime)) \\
+&=& \log \int p ( \bm{x _i^ q} | \bm{v_i ^ q} , \bm{z _i^ q} , \bm{r _i} ; \theta ) \pi (\bm{z_i^q} | \bm{v_i^q}, \bm{r_i}; \theta) \mathrm { d } \bm{z_i^q} \\
+&\geq& 
+\mathbb{E} _ {\bm{z_i^q} \sim q(\bm{z_i^q}|\bm{x_i^q}, \bm{v_i^q}, \bm{r_i}; \phi)} [\log p ( \bm{x_i ^ q} | \bm{v_i ^ q} , \bm{z _i^ q} , \bm{r_i} ; \theta )]
+- \mathrm{D_{KL}} (q||\pi) \\
+&=& 
+\mathbb{E} _ {\bm{z_i^q} \sim q(\bm{z_i^q}|\bm{x_i^q}, \bm{v_i^q}, \bm{r_i}; \phi)} [\log p ( \bm{x_i ^ q} | \bm{v_i ^ q} , \bm{z _i^ q} , \bm{r_i} ; \theta )
+-  \sum _ { l = 1 } ^ { L } {\mathrm { D } _ { \mathrm { KL } }}
+	(q_l || \pi_l) ] \label{eq:meta_gqn_elbo}
+\end{eqnarray}
+
+これがメタ学習としての生成クエリネットワークの定式化となる．
+
+\section{生成クエリネットワークの問題点}
+\label{section:problem}
+前節のメタ学習としての生成クエリネットワークの解釈を踏まえると，生成クエリネットワークにはいくつかの問題点があることがわかる．
+\begin{description}
+\item[$q\prime \left( \bm{r_i} | D_i ; {\phi}^\prime \right)$が決定論的な関数で定義されている]\mbox{}\\
+生成クエリネットワークでは，シーン表現$\bm{r_i}$の分布を近似する$q\prime \left( \bm{r_i} | D_i ; {\phi}^\prime \right)$を表現ネットワークを用いて決定論的な関数として定義しているが，事前に与えられたシーンのサンプル$D_i$から得られるシーン固有の知識というのは，常に不確実性を含んでおり，決定論的な関数ではそれを表現することは不可能である．例えば，$D_i$として１つの視点からの観測のみが与えられた場合，物体の影となっていて観測できない部分などの知識はそれのみから得ることは不可能であるため，シーンの全てを表すような表現は決定論的に導くことは一般にできない．生成クエリネットワークでは，その不確実性のモデリングを個別のデータに依存する確率的な潜在変数$\bm{z_i^k}$によって行なっているが，本来これはシーン表現$\bm{r_i}$が担うべき役割であり，さらに観測不可能な変数を増やすことで，複雑で大きなモデルが必要となり，学習にかかるコスト増大の原因になっていると考えられる．
+\item[冗長な近似を行なっている]\mbox{}\\
+生成クエリネットワークでは，式(\ref{eq:approximation_r})での$q^\prime ( \bm{r_i} | D_i ; {\phi}^\prime )$による$p( \bm{r_i} | D_i ; \theta )$の近似に加えて，式(\ref{eq:meta_gqn_elbo})で$q(\bm{z_i^q}|\bm{x_i^q}, \bm{v_i^q}, \bm{r_i}; \phi)$による$p(\bm{z_i^q}|\bm{x_i^q}, \bm{v_i^q}, \bm{r_i}; \theta)$の近似が発生しており，学習時には3つのパラメータ$\theta, \phi, {\phi}^\prime$を同時に最適化することが必要となっている．生成クエリネットワークの学習の不安定性はこのような冗長な近似による複雑な最適化が主な原因となっていると考えられる．
+\end{description}
+
+このように，生成クエリネットワークの課題として挙げられていた学習時の時間面・リソース面のコストの大きさや学習の不安定性は，その確率モデルの設計が原因であるとして説明できることがわかり，これらを踏まえた改善手法の提案が必要である．
+%するシーンに固有の知識をもつ変数$\bm{r_i}$と個別のデータ(\bm{$v_i^k}, \bm{x_i^k}$)に固有の潜在変数$\bm{z_i^k}$という2つの観測不可能な変数を扱っているため，とで近似を2回行わなければならない．このような冗長な近似を行うと，近似のためのニューラルネットワークを新たに追加する必要が生まれるため，パラメータ数の増加につながり，最適化が難しくなる原因となっている．
