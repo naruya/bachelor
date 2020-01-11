@@ -8,8 +8,8 @@
 \begin{figure}[tbp]
 \begin{center}
   \begin{tikzpicture}[scale=1, transform shape]
-    \node[obs] (x1) {$\mathbf{x}$};
-    \node[latent, above=of x1] (z1) {$\mathbf{z}$};
+    \node[obs] (x1) {$\bm{x}$};
+    \node[latent, above=of x1] (z1) {$\bm{z}$};
     \edge {z1} {x1};
     \end{tikzpicture}
 \caption{VAEのグラフィカルモデル}
@@ -48,8 +48,8 @@ VAEでは，この近似分布$q(\bm{z}|\bm{x};\phi)$もニューラルネット
 \begin{figure}[tbp]
   \begin{center}
     \begin{tikzpicture}[scale=1, transform shape]
-      \node[obs] (x1) {$\mathbf{x}$};
-      \node[latent, above=of x1] (z1) {$\mathbf{z}$};
+      \node[obs] (x1) {$\bm{x}$};
+      \node[latent, above=of x1] (z1) {$\bm{z}$};
       \draw (x1) edge[out=135,in=225,->,dashed] (z1);
       \edge {z1} {x1};
       \end{tikzpicture}
