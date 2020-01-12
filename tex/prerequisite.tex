@@ -66,6 +66,7 @@ $q(z|x)$は推論分布/推論モデルと呼ばれ、グラフィカルモデ�
 式（\ref{eq:elbo}）の第2項の$\mathrm{D_{KL}}$（カルバックライブラー距離）は，いま$p(\bm{z})$，$q(\bm{z}|\bm{x}; \phi)$共にガウス分布を仮定しているため，解析的に計算することができる．
 式（\ref{eq:elbo}）の第1項は、p(x|z)の分布に正規分布やベルヌーイ分布を仮定することで二乗誤差やクロスエントロピー誤差として計算できる。
 
+この変分下限を目的関数にしてNNを学習させる．
 以上がVAEの概要である．このように学習されたVAEは，事前分布$p(\bm{z})$から$\bm{z}$をサンプリングし，デコーダを通すことでFig. \ref{fig:vae_example}のような新たなデータを生成することができる．左は顔画像のデータセットFrey Faceを用いて学習したVAEによって生成された画像，右はMNISTで学習したVAEの生成画像である．
 
 
@@ -97,18 +98,35 @@ DSSMではVAEと同じように，以下の変分下限から最尤推定によ�
   && \hspace{2em} \left. - \int q(s_t|s_{t-1}, a_t, o_t) \log \frac{p(s_t|s_{t-1}, a_t)}{q(s_t|s_{t-1}, a_t, o_t)}ds_t \right) \nonumber \\
   &=& \sum_{t=1}^T \left( \mathbb{E}_{s_t \sim q(s_t|s_{t-1}, a_t, o_t)} [\log p(o_t|s_t)] \right. \nonumber \\
   && \hspace{2em} \left. - \mathbb{E}_{s_{t-1} \sim q(s_{t-1}|s_{t-2}, a_{t-1}, o_{t-1})} [\mathrm{D_{KL}}(q(s_t|s_{t-1}, a_t, o_t) \| p(s_t|s_{t-1}, a_t, o_t))] \right)  \nonumber \\
-  \label{eq:ssm_elbo}
+  \label{eq:dssm_elbo}
 \end{eqnarray}
 
-ただし本研究では慣例に習って$s_0$を$s_0 \sim q(s_0|\vec{0}, \vec{0}, o_0) $によって定め，（\ref{eq:ssm_elbo}）の第2項の$s_0$のサンプリングはこれで置き換える．
+ただし$s_0$は、初期状態が一定な問題を考える際は常にゼロベクトルなど一定の値にすることもあるが，そうでない場合は何らかの方法で推論する必要がある．本研究では慣例に習って$s_0$を$s_0 \sim q(s_0|\vec{0}, \vec{0}, o_0) $によって定め，（\ref{eq:dssm_elbo}）の第2項の$s_0$のサンプリングはこれで置き換える．
 
+式は、イェンセンの不等式を使い、qはpの近似である．
 
-
+以上がDSSMの概要である．DSSMを用いると, \ref{fig:dssm_planet}, \ref{fig:dssm_dkf}のような新たなデータを生成することができる．actionとして回転情報が入れられている．
 
 \begin{figure}[tbp]
   \begin{center}
-    \includegraphics[width=\linewidth]{./figures/ssm.png}
+    \includegraphics[width=\linewidth]{./figures/dssm.png}
     \caption{SSMのグラフィカルモデル}
     \label{fig:ssm}
+  \end{center}
+\end{figure}
+
+\begin{figure}[tbp]
+  \begin{center}
+    \includegraphics[width=\linewidth]{./figures/dssm_planet.png}
+    \caption{DSSMで生成される映像の例．ただしSSMを少し拡張したRSSMモデルを使っている}
+    \label{fig:dssm_planet}
+  \end{center}
+\end{figure}
+
+\begin{figure}[tbp]
+  \begin{center}
+    \includegraphics[width=\linewidth]{./figures/dssm_dkf.png}
+    \caption{DSSMで生成される映像の例．}
+    \label{fig:dssm_dkf}
   \end{center}
 \end{figure}

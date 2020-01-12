@@ -1,5 +1,21 @@
 \chapter{深層状態空間モデルの限界}
 \label{chap:baseline}
 
+
+深層状態空間モデルは，潜在変数の次元を大きくしたときの学習が難しい．そのことを実験的に示した上で、理論的な問題点を述べる．
+
 \section{学習が失敗した例}
+\ref{fig:dssm_failure}は、本論文の4章以降でベースラインとして述べる通常のSSMモデルを、潜在変数の次元を何通りかに変えてモデルを構築し、学習中の様子ある．潜在変数を低次元にすると順調に学習が進み、少しずつ近い映像が出力されるようになるが，次元を大きくすると途中で目的関数とする変分下限の値が正の方向に発散しやすくなる．さらに調べると、変分下限のうち
+
+
+\begin{figure}[tbp]
+    \begin{center}
+      \includegraphics[width=\linewidth]{./figures/dssm_failure.png}
+      \caption{DSSMの学習が失敗した例}
+      \label{fig:dssm_failure}
+    \end{center}
+  \end{figure}
+
 \section{深層状態空間モデルの問題点}
+
+
