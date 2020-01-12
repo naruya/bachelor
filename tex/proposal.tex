@@ -48,7 +48,7 @@
 
 \begin{figure}[tbp]
   \begin{center}
-    \includegraphics[scale=0.2]{./figures/transition_base.png}
+    \includegraphics[width=0.5\linewidth]{./figures/transition_base.png}
     \caption{transition base}
     \label{fig:transition_base}
   \end{center}
@@ -63,21 +63,33 @@
   \end{center}
 \end{figure}
 
+\begin{figure}[tbp]
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{./figures/proposal.png}
+    \caption{proposal 2つずつ記載されているotは同じデータを示すが．異なるsから独立に生成されることを明示している．}
+    \label{fig:proposal}
+  \end{center}
+\end{figure}
 
 
 \subsection{確率モデル・最適化}
 
 ここまでで、潜在変数の次元を大きくした際に，獲得できる状態表現とその遷移がどのようなものかを考察した．
-次の2点を満たすモデルを
+考慮すべき点は以下のようになる．
+
+1 stateに大きな次元を仮定した際，stateの推論が難しいため学習が難しく不安定になる． \\
+2 状態表現には階層性があり，表面的な状態表現になるほど学習が難しくなるが、中心的な状態表現はベースライン手法で学習ができる． \\
+3 状態表現の遷移には順序があリ，大きな潜在表現の遷移を直接学習するのは難しいが，中心的な潜在表現の遷移を学習することはベースライン手法でも可能である． \\
+
+これらを踏まえて、次を満たすモデルを考えることにした．
+1. a
 
 
-\begin{figure}[tbp]
-  \begin{center}
-    \includegraphics[width=\linewidth]{./figures/proposal.png}
-    \caption{proposal}
-    \label{fig:proposal}
-  \end{center}
-\end{figure}
+最終的にFig. \ref{fig:proposal}のようなモデルを提案する．
+
+
+
+
 
 \subsection{データの生成方法(評価時)}
 \section{類似手法との差分}
