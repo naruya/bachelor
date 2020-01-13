@@ -57,7 +57,7 @@
 
 \begin{figure}[tbp]
   \begin{center}
-    \includegraphics[width=\linewidth]{./figures/transition_proposal.png}
+    \includegraphics[width=0.8\linewidth]{./figures/transition_proposal.png}
     \caption{transition proposal}
     \label{fig:transition_proposal}
   \end{center}
@@ -65,8 +65,8 @@
 
 \begin{figure}[tbp]
   \begin{center}
-    \includegraphics[width=0.8\linewidth]{./figures/proposal.png}
-    \caption{proposal 2つずつ記載されているotは同じデータを示すが．異なるsから独立に生成されることを明示している．}
+    \includegraphics[width=\linewidth]{./figures/proposal.png}
+    \caption{(縦に分割する！)点線の$s^1$, $s^2$の推論分布は簡単のため時刻t, t-1でのみ記載している．proposal (学習時) 2つずつ記載されている$o_t$は同じデータを示すが．異なるsから独立に生成されることを明示している．}
     \label{fig:proposal}
   \end{center}
 \end{figure}
@@ -87,11 +87,48 @@
 
 最終的にFig. \ref{fig:proposal}のようなモデルを提案する．
 
+$s^1$は$n^1$次元，$s^2$は$n^2$次元，$n^1 < n^2$である
+
+確率的生成過程は以下
+\begin{equation}
+  p(o_{1:T}|a_{1:T}) = \prod_{t=1}^T \iint p(o_t|s^2_t) p(s^2_t|s^2_{t-1}, a_t, s^1_t) p(s^1_t|s^1_{t-1}, a_t) d{s^1_t}{ds^2_t}
+\end{equation}
+
+
+この時の変分下限は以下
+\begin{eqnarray}
+  \ (ELBO) \nonumber \\
+  &=& \sum_{t=1}^T \left( \mathbb{E}_{s^2_t \sim q(s^2_t|a_{1:t}, o_{1:t})} [\log p(o_t|s^2_t)] \right. \nonumber \\
+  && \hspace{2em} \left. - \mathbb{E}_{s^1_{t-1} \sim q(s^1_{t-1}|a_{1:t-1}, o_{1:t-1}), 改行したい s^2 \sim}  [\mathrm{D_{KL}}(q(s_t|s_{t-1}, a_t, o_t) \| p(s_t|s_{t-1}, a_t, o_t))] \right. \nonumber \\
+  && \hspace{2em} \left. - \mathbb{E}_{s^1_{t-1} \sim q(s^1_{t-1}|a_{1:t-1}, o_{1:t-1}), 改行したい s^2 \sim } [\mathrm{D_{KL}}(q(s_t|s_{t-1}, a_t, o_t) \| p(s_t|s_{t-1}, a_t, o_t))] \right) \nonumber \\
+  \label{eq:hssm_elbo}
+\end{eqnarray}
+
+
+目的関数は以下
+% 
+\begin{eqnarray}
+  \ (目的関数) \nonumber \\
+  &=& \sum_{t=1}^T \left( \mathbb{E}_{s^2_t \sim q(s^2_t|a_{1:t}, o_{1:t})} [\log p(o_t|s^2_t)] + \beta \mathbb{E}_{s^1_t \sim q(s^1_t|a_{1:t}, o_{1:t})} [\log p(o_t|s^1_t)] \right. \nonumber \\
+  && \hspace{2em} \left. - \mathbb{E}_{s^1_{t-1} \sim q(s^1_{t-1}|a_{1:t-1}, o_{1:t-1}), 改行したい s^2 \sim}  [\mathrm{D_{KL}}(q(s_t|s_{t-1}, a_t, o_t) \| p(s_t|s_{t-1}, a_t, o_t))] \right. \nonumber \\
+  && \hspace{2em} \left. - \mathbb{E}_{s^1_{t-1} \sim q(s^1_{t-1}|a_{1:t-1}, o_{1:t-1}), 改行したい s^2 \sim } [\mathrm{D_{KL}}(q(s_t|s_{t-1}, a_t, o_t) \| p(s_t|s_{t-1}, a_t, o_t))] \right) \nonumber \\
+  \label{eq:hssm_loss}
+\end{eqnarray}
+
+ここで $\beta$ は学習中に更新されるハイパーパラメータで， $\beta = exp(-epoch*0.001)$としている．
+
+提案モデルは，前節に従って状態表現の階層性とその遷移の順序を考慮したモデルで，また大きなstate$s^2_t$の推論に$s^1_t$を用いることで，stateに大きな次元を仮定した際にstateの遷移先の推論が難しいという問題を克服する． \\
+
+3階層以上になった時も同様に，大きなstateは小さいstate全てを使って遷移する．
+であり，階層を重ね，中心的な
+
+$\beta$を導入しているのは，ある程度高次元のstateの遷移が安定したあとは
+1良い低下一層の表現を得ることと，2再構成しやすい低次元の表現を得ること，は必ずしも一致しないため，本来の生成過程以外の
 
 
 
+評価時には、$p(x|s^2)$を用いてデータを生成する．
 
-\subsection{データの生成方法(評価時)}
 \section{類似手法との差分}
 DRAW[]はVAEの潜在変数に階層性をもたせたモデルで、データに遷移はないが、狙いは提案手法と似ている．多層RNN[]は直前の観測を逐次的に入力すplanetでRNNベースはダイナミクスの獲得が弱く，長期の予測が難しいと報告されている．FHMMは離散低次元でEMアルゴリズムによって最適化をしている
 
