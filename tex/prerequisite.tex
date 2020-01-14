@@ -44,7 +44,7 @@ $q(z|x)$は推論分布/推論モデルと呼ばれ、グラフィカルモデ�
   &=& \mathbb{E}_{\bm{z} \sim q(\bm{z}|\bm{x})} [\log p(\bm{x}|\bm{z})] - \mathrm{D_{KL}}(q(\bm{z}|\bm{x}) \| p(\bm{z})) \label{eq:elbo}
 \end{eqnarray}
 
-
+% \caption[hoge]{fuga}
 \begin{figure}[bp]
   \begin{center}
     \begin{tikzpicture}[scale=1, transform shape]
@@ -69,7 +69,7 @@ $q(z|x)$は推論分布/推論モデルと呼ばれ、グラフィカルモデ�
 この変分下限を目的関数にしてNNを学習させる．
 以上がVAEの概要である．このように学習されたVAEは，事前分布$p(\bm{z})$から$\bm{z}$をサンプリングし，デコーダを通すことでFig. \ref{fig:vae_example}のような新たなデータを生成することができる．左は顔画像のデータセットFrey Faceを用いて学習したVAEによって生成された画像，右はMNISTで学習したVAEの生成画像である．
 
-
+% \caption[hoge]{fuga}
 \begin{figure}[tbp]
   \begin{center}
     \includegraphics[width=\linewidth]{./figures/vae.png}
@@ -115,6 +115,7 @@ DSSMではVAEと同じように，以下の変分下限から最尤推定によ�
   \end{center}
 \end{figure}
 
+% \caption[hoge]{fuga}
 \begin{figure}[tbp]
   \begin{center}
     \includegraphics[width=\linewidth]{./figures/dssm_planet.png}
@@ -123,6 +124,7 @@ DSSMではVAEと同じように，以下の変分下限から最尤推定によ�
   \end{center}
 \end{figure}
 
+% \caption[hoge]{fuga}
 \begin{figure}[tbp]
   \begin{center}
     \includegraphics[width=\linewidth]{./figures/dssm_dkf.png}

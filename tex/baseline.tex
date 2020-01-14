@@ -7,7 +7,7 @@
 \section{学習が失敗した例}
 \ref{fig:dssm_failure}は、本論文の4章以降でベースラインとして述べる通常のSSMモデルを、潜在変数の次元を何通りかに変えてモデルを構築し、学習中の様子ある．潜在変数を低次元にすると順調に学習が進み、少しずつ近い映像が出力されるようになるが，次元を大きくすると途中で目的関数とする変分下限の値が正の方向に発散しやすくなる．さらに調べると、変分下限の２つの項のうち、KLダイバージェンスが先に発散していることがわかる．
 
-
+% \caption[hoge]{fuga}
 \begin{figure}[tbp]
     \begin{center}
       \includegraphics[width=\linewidth]{./figures/dssm_failure.png}
@@ -35,4 +35,7 @@ DSSMで学習が難しい理由として、以下が考えられる
 1VAEと違い、DSSMではKL項でpriorを近づけ先であるposteriorが固定されていない．
 2stateの次元が小さく、$H(o) >> H(s_{prev})$ であるときのposteriorの出力は一意に定まり
 stateの次元が大きく $H(o) >> H(s_{prev})$でない時は安定しない
+近似がゆるくなる！！！！！
 また、stateの推論にモンテカルロ近似をするが、その時のサンプル回数Lを増やすて平均を取ることは、経験的にうまく行かないことが知られてたりするのかな…?
+
+近づけ先が固定されていないときにKLがnanすることは、Variational Autoencoder with Arbitrary Conditioningなどでも言われている
