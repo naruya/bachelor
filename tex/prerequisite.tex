@@ -139,18 +139,18 @@ DSSMでは以下の仮定をおく．式（\ref{eq:dssm_pre}）は各時刻の�
 以上がDSSMの概要である．DSSMを用いると，図 \ref{fig:dssm_dkf}，図 \ref{fig:dssm_planet} のように数フレーム先を予測することができる．図 \ref{fig:dssm_dkf}は，行動系列として回転情報が与えられており，回転する画像の予測を行う．図 \ref{fig:dssm_planet}は四足歩行するシミュレータ上のエージェントの第三者視点からの観測を予測しており，行動系列としてエージェントの各関節に加えられる力が与えられている．DSSMは長期の予測をした際にも生成自体が安定している点で自己回帰モデルと比較して優れている．
 
 % \caption[hoge]{fuga}
-\begin{figure}[bp]
+\begin{figure}[h]
   \begin{center}
-    \includegraphics[width=\linewidth]{./figures/dssm_dkf.png}
+    \includegraphics[width=0.20\linewidth]{./figures/dssm_dkf.png}
     \caption[DSSMで生成される映像の例(回転する数字画像)]{DSSMで生成される映像の例(回転する数字画像)．\cite{krishnan2015deep}より引用}
     \label{fig:dssm_dkf}
   \end{center}
 \end{figure}
 
 % \caption[hoge]{fuga}
-\begin{figure}[tbp]
+\begin{figure}[h]
   \begin{center}
-    \includegraphics[width=\linewidth]{./figures/dssm_planet.png}
+    \includegraphics[width=0.8\linewidth]{./figures/dssm_planet.png}
     \caption[DSSMで生成される映像の例(強化学習エージェント)]{DSSMで生成される映像の例(強化学習エージェント)．\cite{hafner2019planet}より引用}
     \label{fig:dssm_planet}
   \end{center}
